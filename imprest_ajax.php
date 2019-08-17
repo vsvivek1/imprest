@@ -3987,6 +3987,11 @@ imp_oprn_msg,imprest_id_ref,action_pending,imp_fy) values
 				$row = $row1[0];
 
 				$imprest_num = $row[imprest_num];
+				$voucher_status = $row[voucher_status];
+
+
+
+
 
 
 				//echo "why";
@@ -4002,7 +4007,9 @@ imp_oprn_msg,imprest_id_ref,action_pending,imp_fy) values
 
 				//echo $count;		
 				// if(($row[imp_holder]==$_SESSION[user_name]) and ($row[imp_holder_office]==$_SESSION[office_code]) and  $count==0)	old logic
-				if ((($row[imp_holder] == $_SESSION[user_name]) and ($row[imp_holder_office] == $_SESSION[office_code])) or $_SESSION[aquired] == 1) {
+				if ((($row[imp_holder] == $_SESSION[user_name]) and ($row[imp_holder_office] == $_SESSION[office_code])) or $_SESSION[aquired] == 1)
+				
+				{
 
 
 					//print_r($row1);
@@ -4022,13 +4029,23 @@ imp_oprn_msg,imprest_id_ref,action_pending,imp_fy) values
 				NEW BELOW 	-->
 
 					<tr>
+<?php
+if($voucher_status==1 or $_SESSION[aquired] == 1)
+{
+?>
 
-
-						<td colspan=2 class="bg-danger text-center"><button name='<?php echo $_POST[imp_voucher_id] ?>' class="btn btn-danger" id=btn_del_voucher>
+						<td colspan=2 class="bg-danger text-center"><button name='<?php echo $_POST[imp_voucher_id] ?>'
+						 class="btn btn-danger" id=btn_del_voucher>
 
 								<span class="fa fa-trash fa-lg"></span>&nbsp;
 
 								Delete</button></td>
+
+<?php 
+}
+
+?>
+
 
 
 						<td colspan=2 class="bg-success text-center"><button name='<?php echo $_POST[imp_voucher_id] ?>' class="btn btn-primary shadow" id=btn_edit_voucher>
