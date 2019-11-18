@@ -474,7 +474,17 @@ class imprestN
 
 		//echo $qry;
 
-		self::show_imprest_cash_book($post[imp_ref_id]);
+		
+
+		// self::show_imprest_cash_book($post[imp_ref_id]);
+
+		// if(!$_SESSION[aquired]==1)
+		if(1)
+{
+// echo $qry2;  //  16 ms
+self::show_imprest_cash_book($post[imp_ref_id]);
+}
+
 
 
 		//echo $qry;   
@@ -482,6 +492,13 @@ class imprestN
 where imprest_num='$post[imp_ref_id]' and aif.imp_file_category='V' order by date_of_payment,upload_time
 ";
 
+if($_SESSION[aquired]==1)
+{
+// echo $qry2;  //  16 ms
+
+$ss=0;
+
+}
 
 
 		self::getHistory($post[imp_ref_id]);
@@ -493,11 +510,22 @@ where imprest_num='$post[imp_ref_id]' and aif.imp_file_category='V' order by dat
 		//echo $qry2;
 
 		////////////////////////////////////////display hiden used for voucher moovment//////////////////////////////////////
-		$qry = "select imp_voucher_id,voucher_num,date_of_payment ,item_desc,amount
-		   from a_imprest_voucher where imprest_num='$post[imp_ref_id]'";
+		
 
-		//echo $qry;
-		self::showHorizontalTableForVouchers($qry, "Vouchers", "voucher", "c");
+
+		// temporaily disabled  un wanted featuere
+		if(!$_SESSION[aquired]==1)
+{
+	$qry = "select imp_voucher_id,voucher_num,date_of_payment ,item_desc,amount
+	from a_imprest_voucher where imprest_num='$post[imp_ref_id]'";
+
+ //echo $qry;
+ //self::showHorizontalTableForVouchers($qry, "Vouchers", "voucher", "c");
+
+
+
+
+}
 		////////////////////////////////////////display hiden used for voucher moovment//////////////////////////////////////	
 
 
@@ -984,7 +1012,7 @@ where imprest_num='$post[imp_ref_id]' and aif.imp_file_category='V'  order by da
 
 		//self:show_imprest_cash_book($post[imp_ref_id]);
 
-		//self:show_imprest_cash_book($post[imp_ref_id]);
+		// self:show_imprest_cash_book($post[imp_ref_id]);
 
 		imprestN::show_imprest_cash_book($post[imp_ref_id]);
 
@@ -1015,7 +1043,7 @@ where imprest_num='$post[imp_ref_id]' and aif.imp_file_category='V'  order by da
 
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-sm-offset-4">
 
-				<button data-imp_op_id=<?php echo $post[imp_op_id]; ?> data-imp_operation='999' data-imprest_ref_id='<?php echo $imprest_ref_id; ?>' data-from_office='<?php echo $_SESSION[office_code]; ?>' data-from_branch='<?php echo $_SESSION[branch_id]; ?>' data-to_office='<?php echo $office_code; ?>' data-to_branch='<?php
+				<button type=button data-imp_op_id=<?php echo $post[imp_op_id]; ?> data-imp_operation='999' data-imprest_ref_id='<?php echo $imprest_ref_id; ?>' data-from_office='<?php echo $_SESSION[office_code]; ?>' data-from_branch='<?php echo $_SESSION[branch_id]; ?>' data-to_office='<?php echo $office_code; ?>' data-to_branch='<?php
 
 																																																																																$tobr = self::getOriginatingbranchOfImprest($imprest_ref_id, 18);
 
@@ -1592,13 +1620,16 @@ where imprest_num='$post[imp_ref_id]' and aif.imp_file_category='V'  order by da
 		$rowq1 = $rowq[0];
 		if ($rowq1[imp_operation] == 999) {
 			$sameOfficeOperation = true;
-			print_r($rowq);
+			// print_r($rowq);
 		}
 
 
 
+/// seting same operation is true if previosu operation id is 777  return from ratifying officer directly to aru
+if($imp_operation ==777){
+	$sameOfficeOperation = true;
 
-
+}
 
 
 
@@ -1639,7 +1670,7 @@ where imprest_num='$post[imp_ref_id]' and aif.imp_file_category='V'  order by da
 
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-sm-offset-4">
 
-				<button data-imp_op_id=<?php echo $post[imp_op_id]; ?> data-imp_operation='999' data-imprest_ref_id='<?php echo $imprest_ref_id; ?>' data-from_office='<?php echo $_SESSION[office_code]; ?>' data-from_branch='<?php echo $_SESSION[branch_id]; ?>' data-to_office='<?php echo $office_code; ?>' data-to_branch='<?php
+				<button type=button data-imp_op_id=<?php echo $post[imp_op_id]; ?> data-imp_operation='999' data-imprest_ref_id='<?php echo $imprest_ref_id; ?>' data-from_office='<?php echo $_SESSION[office_code]; ?>' data-from_branch='<?php echo $_SESSION[branch_id]; ?>' data-to_office='<?php echo $office_code; ?>' data-to_branch='<?php
 
 																																																																																$tobr = self::getOriginatingbranchOfImprest($imprest_ref_id, 18);
 
@@ -3120,6 +3151,14 @@ order by x.date_of_payment
 		//echo $_SESSION[user_name];
 		//echo $imp_holder;//
 
+		if($_SESSION[aquired]==1)
+{
+
+$ss=0;
+
+// echo $qry;
+
+}
 
 		//echo $qry;
 		$used = self::getData($qry, 'sum');
@@ -3149,6 +3188,15 @@ order by x.date_of_payment
 
 		// and imp_time<'$freshIssuebeforeDate'
 
+
+		if($_SESSION[aquired]==1)
+{
+
+$ss=0;
+
+// echo $qry;
+
+}
 
 		$used = self::getData($qry, 'sum');
 
@@ -3219,9 +3267,44 @@ order by x.date_of_payment
 	{
 
 
-
+		$available_in_table=false;
 
 		$imp_num = $imp_ref_id;
+
+
+if(!imp_ref_id==0){
+	// echo $imp_ref_id.'this';
+$qry="select * from a_imprest_details where imprest_ref_id='$imp_ref_id'";
+$db = new DBAccess;
+		$row1 = $db->SelectData($qry);
+		// print_r($row1);
+		if (!isset($row1['EOF']))
+		 {
+
+
+			// echo $qry;
+			$available_in_table=true;
+
+			$row=$row1[0];
+
+			$exp=$row[expenditure];
+			$op_bal=$row[opening_balance]*-1;
+			$imp_transit=$row[imp_total_in_transit];
+			$bal=$row[balance];
+			
+
+		}
+
+
+
+
+}
+
+// $available_in_table=false;
+
+
+
+
 		$qry = "select date_of_payment DATE,imp_voucher_id as \"Voucher Id.\",voucher_num as \"Sl.No of Voucher \",item_desc as 
 	\"Particulars of transaction\",amount as Amount,item_acc_code from a_imprest_voucher
 	where imp_voucher_id>1 and imp_holder='$_SESSION[user_name]' and imp_holder_office='$_SESSION[office_code]'
@@ -3242,6 +3325,16 @@ order by x.date_of_payment
 	 ";
 		}
 
+
+
+		if($_SESSION[aquired]==1)
+{
+
+	// checking qry 1
+
+	// echo $qry;   .5 ms 
+
+}
 		//echo $qry;
 
 
@@ -3293,7 +3386,7 @@ order by x.date_of_payment
 
 
 
-			//$openingbalance=self::getSumOfIssuedImprestInFy($emp_code,$office_code); 
+			// $openingbalance=self::getSumOfIssuedImprestInFy($emp_code,$office_code); 
 
 
 			$empcode1 = split("/", $imp_ref_id);
@@ -3319,14 +3412,35 @@ order by x.date_of_payment
 			}
 
 			$freshIssuebeforeDate = $y . "-" . $m . "-" . "$d";
-			$openingbalance = self::getSumOfIssuedImprestInFy($emp_code, $office_code, $freshIssuebeforeDate);
+			
+			if($available_in_table){
+				$openingbalance=self::getSumOfIssuedImprestInFy($emp_code, $office_code, $freshIssuebeforeDate);
+
+			}else{
+				$openingbalance = self::getSumOfIssuedImprestInFy($emp_code, $office_code, $freshIssuebeforeDate);
+
+
+			}
 
 			//echo $openingbalance;
 
 			//$date_of_submision=date('d-M-Y',$date_of_submision);
 
 			//echo $imp_ref_id;
-			$openingCashInhand1 = self::getOpeningCashInhand($emp_code, $office_code, $imp_ref_id);
+			
+
+
+			if($available_in_table){
+				$openingCashInhand1=$op_bal;
+
+			}else{
+				$openingCashInhand1 = self::getOpeningCashInhand($emp_code, $office_code, $imp_ref_id);
+
+
+			}
+
+
+
 			$openingCashInhand = $openingCashInhand1 * -1;
 
 			$openingCashInhand1 = number_format((float) $openingCashInhand, 2, '.', '');
@@ -3386,6 +3500,7 @@ order by x.date_of_payment
 				if ($row[item_desc] == 'KSEB') {
 
 					$cheque = self::getChequeDetailsfromImpVoucherId($row['imp_voucher_id']);
+					// $cheque =' a a';
 
 					$chk = explode(' ', $cheque);
 
@@ -3403,7 +3518,7 @@ order by x.date_of_payment
 					$received1 = number_format((float) $received, 2, '.', '');
 
 
-					$cheque = self::getChequeDetailsfromImpVoucherId($row['imp_voucher_id']);
+					// $cheque = self::getChequeDetailsfromImpVoucherId($row['imp_voucher_id']);
 					echo "<td  class=bg-primary> Received Amount by Recoupment $cheque </td>";
 
 
@@ -3476,7 +3591,18 @@ order by x.date_of_payment
 			$cash2 = $cash1 * -1;
 
 			$cash = number_format((float) $cash2, 2, '.', '');
-			$imprest_already_submitted = self::getSumOfImprestSubmitted($imp_num);
+			
+			
+			
+
+			if($available_in_table){
+				$imprest_already_submitted=$imp_transit;
+
+			}else{
+				 $imprest_already_submitted = self::getSumOfImprestSubmitted($imp_num);
+
+
+			}
 
 
 			echo "<tr class=' text-primary lead'><td colspan=3>Total Expenditure</td><td></td><td id=td_tot_exp>$total1</td><td></td></tr>";
@@ -3486,7 +3612,7 @@ order by x.date_of_payment
 
 
 
-			echo $imprest_already_submitted;
+			// echo $imprest_already_submitted;
 			//echo "ref id $imp_num";
 			if ($imprest_already_submitted >= 0) {
 				$cash_in_hand2 = $cash_in_hand1 - $imprest_already_submitted;
@@ -5746,9 +5872,12 @@ and aiv.voucher_status=1  and aif.imp_file_category='V' order by date_of_payment
 							// 	$date="2018-04-01";
 							// }
 
-							//if($_SESSION[aquired]!=1)
+							if($_SESSION[aquired]==1){
+// print_r($_SESSION);
 
-							if (1) {
+							}
+
+							if (0) {
 
 								include_once('../class/budget.class.php');
 
@@ -6331,6 +6460,21 @@ status=1
 			}
 
 
+
+
+			 /// origin time  ///
+
+
+			 $qry="insert into a_date_of_imprest_origin (imprest_id_ref) values('$impReqNum')";
+			 $result = $db->UpdateData($qry);
+			 if ($result['EOF']) {
+				 $result['adl_msg'] = "Insert into amnt. details failed";
+				 $db->DBrollBackTrans();
+				 $msg = "updating to imprest origin failed";
+				 self::alert("$msg");
+				 return $result;
+				 //return $result;
+			 }
 
 
 
@@ -7096,6 +7240,17 @@ imp_holder_office='$_SESSION[office_code]' and type='cash_in_hand'
 					$imp_operation = 200;
 				}
 
+
+				/// if ip operation is set from post  overrding calculation of imp_operation
+
+				if($_SESSION[aquired]==1){
+					if (isset($post[imp_operation])){
+						$imp_operation = $post[imp_operation];
+	
+					}
+
+				}
+				
 
 
 
@@ -9529,6 +9684,7 @@ and split_part(unique_code,'-',1)= '$office_code'
 
 
 			?>
+			<!-- wwww -->
 			<div class=row>
 				<div class="col-sm-10 col-sm-offset-1 well">
 
@@ -9546,9 +9702,30 @@ and split_part(unique_code,'-',1)= '$office_code'
 						<tr>
 							<td class="lead bg-danger">Return to </td>
 							<td>
+<?php 
+
+// print_r($_SESSION);
+
+if($_SESSION[aquired]){
+
+	$qry="select from_office from a_imprest_operaion where imprst_id_ref='$imp_ref_id' ";
+	$db = new DBAccess;
+	$row = $db->SelectData($qry);
 
 
-								<button class="btn btn-danger btn_fwd_imprest" name='<?php echo $post[branch_id]; ?>' id='<?php echo $post[from_ofc_code]; ?>'>Return to
+	//$db=new DBAccess;
+
+	if (!$row[EOF] == 1) {
+
+		print_r($row);
+}
+}
+
+?>
+
+
+
+	<button class="btn btn-danger btn_fwd_imprest" name='<?php echo $post[branch_id]; ?>' id='<?php echo $post[from_ofc_code]; ?>'>Return to
 
 									<?php echo self::get_office_name($post[from_ofc_code]); ?>
 
@@ -10192,11 +10369,22 @@ and split_part(unique_code,'-',1)= '$office_code'
 		public static function getChequeDetailsfromImpVoucherId($voucher)
 		{
 
-			$qry = "select description,to_char(trans_date,'DD/MM/YYYY') as date1  from a_imprest_voucher aiv inner join payment_trans  paytn on aiv.imp_voucher_id=paytn.bill_trans_id
+			$qry = "select description,to_char(trans_date,'DD/MM/YYYY') as date1  from a_imprest_voucher aiv inner join
+			 payment_trans  paytn on aiv.imp_voucher_id=paytn.bill_trans_id
 
 inner join t_master tm on tm.trans_id=paytn.trans_id
 
  where aiv.type='r' and imp_voucher_id=$voucher";
+
+
+			$qry1 = "select description,to_char(trans_date,'DD/MM/YYYY') as date1 from 
+			 payment_trans  paytn 
+
+inner join t_master tm on tm.trans_id=paytn.bill_trans_id
+
+ where tm.trans_id=$voucher";
+
+//  echo $qry;
 
 			$db = new DBAccess;
 			$row = $db->SelectData($qry);
@@ -10235,6 +10423,14 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 		 from a_imprest_operations aio left join a_imprest_status ais 
 		
 		on ais.stat_id=aio.imp_operation inner join offices o on o.code=aio.to_office
+		
+		where from_office='$_SESSION[office_code]' and 
+		from_branch='$_SESSION[branch_id]' order by imprest_op_id desc";
+
+			$qry = "select imprest_op_id as \"operation\",
+		imp_oprn_msg as Message,imprest_id_ref as
+		 reference,imp_operation,action_pending, to_char(imp_opn_time,'DD/MM/YYYY') as date1 
+		 from a_imprest_operations  
 		
 		where from_office='$_SESSION[office_code]' and 
 		from_branch='$_SESSION[branch_id]' order by imprest_op_id desc";
@@ -10309,7 +10505,8 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 			if ($row1[err_msg] != "Nothing to Show in Out Box") {
 				foreach ($row1 as $row) {
 
-
+					$revokable=-1;
+					$outTrans=-1;
 					if ($sl == 1) {
 						$sl++;
 						$key = array_keys($row);
@@ -10357,7 +10554,7 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 					} elseif ($imprest_transaction_type == "VC") {
 						$amount = self::GetimprestRecoupmentAmount($row[reference], 'c');
 
-						$amt_info = "<span class=text-success>4. Recoupment Amount : $amount</span>";
+						$amt_info = "<span class=text-success>4. Clossure Amount : $amount</span>";
 					}
 
 					$empcode1 = split("/", $row[reference]);
@@ -10372,11 +10569,11 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 						
 						$amt_info
 						
-						
+						4. imp opn $imp_operation
 						
 						</td>";
 
-					if ($imp_operation == 200) {
+					if ($imp_operation == 200 or $imp_operation == 300) {
 
 
 
@@ -10395,7 +10592,7 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 
 							//echo $qry;
 
-							$no_recoup_voucher = "NO RECOUP VOUCHER";
+							// $no_recoup_voucher = "NO RECOUP VOUCHER";
 						} else {
 
 							//	print_r($out1);
@@ -10409,7 +10606,7 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 							$outTrans1 = $db->SelectData($qry);
 							$outTrans = $outTrans1[0][status];
 
-							//echo "out trans $outTrans";
+							
 
 
 
@@ -10426,14 +10623,14 @@ inner join t_master tm on tm.trans_id=paytn.trans_id
 
 
 							// echo $imprest_id_ref;
-							if ($imprest_id_ref = '1104435/6599/V/2019-2020/1104435150720191563185192.9818') {
+							if ($imprest_id_ref == '1104435/6599/V/2019-2020/1104435150720191563185192.9818') {
 
 								$revokable = 1;
 							}
 						}
 					}
-
-
+				//	echo "";
+// echo "<td>out trans $outTrans</td>";
 					//echo "<td><button class='btn btn-warning edit' value=$row[operation]>Edit</button></td>";
 
 					if ($row[action_pending] == 't') {
@@ -10900,7 +11097,7 @@ if ($imprest_transaction_type == "V") {
 
 
 										<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-											<h3 class="<?php echo $txt_class; ?>  ">
+											<h3 id=<?php echo "m$row[imprest_op_id]" ?> class="<?php echo $txt_class; ?>  ">
 												<?php echo "$dispaly_voucher_type"; ?>
 												by <?php echo "$emp_name"; ?> of <br> <?php echo "$imprest_of_office_name"; ?></h3>
 
@@ -11177,6 +11374,9 @@ and coalesce(type,'0')<>'r'";
 									<tr>
 										<td class='text-success lead'>Imprest Amount </td>
 										<td>
+
+										<input type="checkbox" class="form-control" id="auto_text_per_imp_request">
+
 											<input type=text class=form-control id=txt_perm_imp_amnt value=<?php echo self::getPermanantImprestAmount() - self::getImprestequestedInFy(); ?>>
 										</td>
 										<td>
@@ -11196,7 +11396,11 @@ and coalesce(type,'0')<>'r'";
 								</table>
 
 								<div id=div_alert_imprest_amount class=alert-danger></div>
-								<h5> Remarks ... </h5>
+								<h5> Remarks .... </h5>
+
+
+							
+
 								<textarea cols=55 rows=10 class=form-control id=txt_area_request_perm_imprest placeholder="Remarks ..."></textarea>
 
 
@@ -11732,7 +11936,117 @@ and coalesce(type,'0')<>'r'";
 
 
 								?>
-								<button class="btn btn-danger btn_fwd_voucher" name='<?php echo $post[branch_id]; ?>' data-imp_op_id='<?php echo $post[imp_op_id]; ?>' data-imp_operation='<?php echo $post[imp_operation]; ?>' id='<?php echo $x; ?>'>
+<?php 
+// if($_SESSION[aquired]==1)
+if(1)
+{
+
+	// print_r($_SESSION);
+?>
+
+<div class="container">
+	<div class="row alert alert-primary" >
+
+
+	<div class="col-sm-3">
+	<label for="">Select office for Returning for Direct Returning </label>
+	
+	</div>
+		<div class="col-sm-3 block-center" >
+
+		
+		
+		
+		
+	<?php  
+// if($_SESSION[aquired]==1)
+if(1)
+{
+
+$qry="select distinct from_office,from_branch from a_imprest_operations where imprest_id_ref='$imp_ref_id'
+
+and from_office<>'$_SESSION[office_code]'
+
+";
+$db = new DBAccess;
+$row = $db->SelectData($qry);
+
+
+//$db=new DBAccess;
+
+if (!$row[EOF] == 1) {
+
+	// print_r($row);
+?>
+
+
+
+<select id=sel_return_to_office>
+<option value="0">Select the Branch</option>
+<?php
+
+foreach ($row as $r1){
+
+$from_ofc_code=$r1[from_office];
+$from_branch_code=$r1[from_branch];
+$from_branch_name=imprestN::getBranchNameFromBranchId($r1[from_branch]);
+
+$ofc_name=self::get_office_name($from_ofc_code);
+echo "<option value=$from_ofc_code-$from_branch_code>  $ofc_name  - $from_branch_name  </option>";
+
+}
+
+?>
+
+
+
+
+</select>
+
+
+<?php
+
+}
+}
+?>	
+	<button
+		
+		
+		data-imp_op_id=<?php echo $imp_op_id; ?>
+		
+		
+
+		
+		
+		 class="btn btn-info"  style="display:none" id="btn_transfer_imprest" >
+Transfer
+</button>	
+		
+		</div>
+
+
+		
+		
+		
+	</div>
+</div>
+
+<?php 
+}
+
+?>
+
+<?php 
+
+// print_r($_SESSION);
+
+
+?>
+
+								<button class="btn btn-danger btn_fwd_voucher"
+								 name='<?php echo $post[branch_id]; ?>' 
+								 data-imp_op_id='<?php echo $post[imp_op_id]; ?>' 
+								 data-imp_operation='<?php echo $post[imp_operation]; ?>' id='<?php echo $x; ?>'>
 
 									Return to
 									<?php $_SESSION['option'] = 'btn_fwd_voucher' ?>
@@ -12058,7 +12372,7 @@ and coalesce(type,'0')<>'r'";
 							<div class="row">
 
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-									<button class="btn btn-success" id=btn_bill>Save Voucher</button>
+									<button disabled=disabled class="btn btn-success" id=btn_bill>Save Voucher</button>
 								</div>
 
 
@@ -12397,7 +12711,9 @@ and imp_fy='$fy'
 
 								<tr class="text-success lead text-center">
 
-									<td colspan=2><button class="btn btn-success" id=btn_bill>Submit Voucher</button></td>
+									<td colspan=2><button disabled=disabled class="btn btn-success" id=btn_bill>
+										<span class="fa fa-upload"></span>
+									Upload  Voucher</button></td>
 									<td colspan=2><button class="btn btn-warning" type=button id=btn_show_imprest_vouchers>View imprest Vouchers</button></td>
 								</tr>
 
@@ -12631,7 +12947,7 @@ and imp_fy='$fy'
 
 								<tr class="text-success lead text-center">
 
-									<td colspan=2><button class="btn btn-success" id=btn_bill>Submit Voucher</button></td>
+									<td colspan=2><button disabled=disabled class="btn btn-success" id=btn_bill>Submit Voucher</button></td>
 									<td colspan=2><button class="btn btn-warning" type=button id=btn_show_imprest_vouchers>View imprest Vouchers</button></td>
 								</tr>
 

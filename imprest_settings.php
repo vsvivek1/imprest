@@ -384,6 +384,18 @@ phone;
 
 
 
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-3 col-sm-offset-3">
+			<label for="">Search A imprest</label>
+			<input type="text" class="form-control" id="search_a_imprest">
+			<button class="btn btn-primary center-block" id="btn_search_aimprest" > Search  </button></div>
+	</div>
+</div>
+
 <?php
 
 

@@ -350,6 +350,204 @@ search-box {
 
 <script>
 
+
+
+
+$(document).on("change","#sel_return_to_office", function(){
+
+	if(branch!=0){
+		var branch=$(this).val().split('-')[1];
+	// alert(branch);
+	var imprest_operation;
+switch (branch){
+case 1:
+	imprest_operation =91;
+	break;
+case branch>2300 && branch<2341:
+	imprest_operation =91; // aee
+	break;
+case branch>2129 && branch<2347:
+	imprest_operation =91; // ae
+	break;
+
+	case branch>1100 && branch <1115:
+	imprest_operation =191;
+	break;
+
+	case branch==2401: 
+	case branch==2402: 
+	case branch==2403: 
+	case branch==2404: 
+
+	// passing offficers
+	imprest_operation =193;
+	break;
+
+	default :
+	imprest_operation =192;
+	break;
+}
+// alert(imprest_operation);
+
+imprest_operation==666;
+$("#btn_transfer_imprest").data('imp_operation',imprest_operation);
+$("#btn_transfer_imprest").css("display","block");
+
+// alert($("#btn_transfer_imprest").data('imp_operation'));
+
+
+	}
+	
+});
+
+
+
+$(document).on("click","#btn_transfer_imprest", function(){
+	
+	// removing has error set if any
+		$("#sel_branch").parents("td").removeClass("has-error");
+	
+	
+var ofc_branch=$("#sel_return_to_office").val();
+var to_office=ofc_branch.split('-')[0];
+var branch_code=ofc_branch.split('-')[1];
+
+// alert(ofc_branch);
+// alert(branch_code);
+// alert(to_office);
+
+// return false;
+
+	var inReceiversInBox=1;
+	
+	var imp_op_id=$(this).data('imp_op_id');
+	var result_target=$(this).parents(".result_target").attr("id");
+	
+    var msg=$("#txt_area_voucher_note").val();
+    var imprest_ref_id=$("#txt_area_voucher_note").data("imp_ref_id");
+    var vouchers=[];
+    var vouchers_json = JSON.stringify(vouchers);
+
+	
+
+	
+	// alert(imp_operation);  return false;
+
+	
+	
+
+	var branch_id=branch_code;	
+	
+	if($("#txt_area_voucher_note").val()=="")
+{
+alert("Please write Remarks ");
+$("#txt_area_voucher_note").parents("td").addClass("has-error");
+ return false;	
+}
+
+
+
+
+
+var imp_operation=$("#btn_transfer_imprest").data('imp_operation');
+
+var aru_code=<?php echo $_SESSION[aru_code];?>
+
+if(to_office==aru_code){
+
+var branch=branch_code;
+	switch (branch_code){
+case 1:
+	imp_operation =91;
+	break;
+case branch>2300 && branch<2341:
+	imp_operation =91; // aee
+	break;
+case branch>2129 && branch<2347:
+	imp_operation =91; // ae
+	break;
+
+	case branch>1100 && branch <1115:
+	// imprest_operation =191;
+	imp_operation =777;
+	break;
+
+	case branch==2401: 
+	case branch==2402: 
+	case branch==2403: 
+	case branch==2404: 
+
+	// passing offficers
+	// imprest_operation =193;
+	imp_operation =777;
+	break;
+
+	default :
+	// imprest_operation =192;
+	imp_operation =777;
+	break;
+}
+
+
+}else{
+	// var imp_operation=$("#btn_transfer_imprest").data('imp_operation');
+	var imp_operation=91;
+
+}
+
+
+
+
+// alert(imp_operation); return false;
+
+//////////////////////////////return to feild new end////////////////////////////////////////////
+
+			
+			
+			$.ajax({
+			url: "imprest_ajax.php",
+			cache: false,
+			type:'POST',
+			data:{option:"btn_fwd_voucher",inReceiversInBox:inReceiversInBox,imp_op_id:imp_op_id,
+                imp_operation:imp_operation,to_office:to_office,msg:msg,imprest_ref_id:imprest_ref_id,
+                branch_id:branch_id,vouchers_json:vouchers_json},
+			beforeSend: show_ajax_loading_image(),
+		
+			success: function(html){ 
+			
+			
+				$('#div_ajax_out').html(html); 
+				stop_ajax_loading_image();
+				
+				
+				
+				}
+			
+			
+		});	
+
+
+		}
+
+
+
+
+
+
+//stop_ajax_loading_image();
+	
+
+
+
+);
+
+
+</script>
+
+
+
+<script>
+
 // $(window).load(function(){
  
 //  $("#tbl_remitance_details_final_closing").hide();
@@ -902,6 +1100,17 @@ printData();
 ////////////////auto fill description //////////////////////
 
 
+function fill_description_fresh()
+{
+	
+	var paid_to=$("#txt_paid_to").val();
+	var date_of_payment=$("#txt_date_of_payement").val();
+	var amount=$("#txt_amount_imprest").val();
+	var purpose=$("input[name=purpose]").val();
+	var desc="Paid Rupees "+amount+" to "+ paid_to+ " on "+ date_of_payment+ " for " + purpose;
+	
+	$("#txt_description_imprest").val(desc);
+	}
 function fill_description()
 {
 	
@@ -4700,6 +4909,9 @@ function hide_ajax_loading_image_time(a)
 	
 	//show input box
 	$(".tr_voucher_new").remove();
+	$("[name=txtpayee]").remove();
+	$("[name=cmbpayee]").remove();
+	
 	$("#ajax_loading_message").html("");
 	var div_acc=$(this).attr("href");
 	var target=$(this).attr("href")+"res";
@@ -5135,32 +5347,33 @@ var url="imprest_ajax.php";
 													      
 													       success: function (response) {
 															   stop_ajax_loading_image();
-													         alert(response);
+															   view_imprest_vouchers();
+													        //  alert(response);
 													          
 													         
-													            $.ajax({
-													       url: url,
-													       type: 'POST',
-													       data:{option:'btn_show_out_box'},
-													       async: false,
-													       cache: false,
-													        beforeSend: function(){$("#ajax_loading1").modal('show')},
-															
-													          
-													     
-													       success: function (response) {
-													         
-													         //var response = JSON.parse(response1);
-													         
-													         view_imprest_vouchers();
-													         $("#ajax_loading1").modal('hide');
-													         
-													       alert(response);
-													         
-													         //$("#div_ajax_out").html(response1);
-													        // $(".panel-footer").html(response1);
-													       }
-													   });
+						// 		$.ajax({
+						// 	url: url,
+						// 	type: 'POST',
+						// 	data:{option:'btn_show_out_box'},
+						// 	async: false,
+						// 	cache: false,
+						// 	beforeSend: function(){$("#ajax_loading1").modal('show')},
+							
+								
+							
+						// 	success: function (response) {
+								
+						// 		//var response = JSON.parse(response1);
+								
+						// 		view_imprest_vouchers();
+						// 		$("#ajax_loading1").modal('hide');
+								
+						// //    alert(response);
+								
+						// 		//$("#div_ajax_out").html(response1);
+						// 	// $(".panel-footer").html(response1);
+						// 	}
+						// });
 													         
 													        
 													         
@@ -5274,7 +5487,7 @@ function show_live_balance(amount,cash_in_hand){
 
 $(document).on("keyup","#txt_amount_imprest", function(event){
 		
-		$("#btn_bill").prop('disabled',false); 
+		$("#btn_bill").prop('disabled',true); 
 		$("#alert_balance").hide(); 
 		$("#txt_amount_imprest").parents('td').removeClass('has-error');
 		var cash_in_hand =$("#td_balance_at_aru").html();
@@ -5329,6 +5542,9 @@ $(document).on("keyup","#txt_amount_imprest", function(event){
 	  
 	  
   
+  }else{
+
+	$("#btn_bill").prop('disabled',false);
   }
   
 		
@@ -5506,6 +5722,7 @@ if(!conf)
 $(document).on("click","#btn_save_adjustments", function(){
 
 	$("#invalid_entity").remove();
+	
 		
 	var vouchers=[];
 
@@ -5845,7 +6062,16 @@ return false;
 		//var to_office=$(this).attr("id");
 		
 		var msg1=$(this).parents(".panel-default").find("h3").html();
+
+		var msgh3='m'+imp_op_id;
+
+		var msg1=$("#"+msgh3).html();
+
+
 		msg1=msg1.replace("<br>","");
+		// console.log(msg1);
+		// alert(msg1);
+		// return false;
 		var amount_tot=$("[name=txtamount]").val();
 		msg=msg1+'\n Amount :'+ amount_tot+'\n Comments : '+msg;
 		
@@ -6383,6 +6609,46 @@ var d= d2+'-'+m+'-'+y;
 });
 
 </script>
+
+
+<script>
+$(document).on("change","#auto_text_per_imp_request",function(){
+
+var amount=$("#txt_perm_imp_amnt").text();
+if($(this).is(':checked'))
+{
+
+var name="<?php echo $_SESSION[full_name].',\n '.$_SESSION[designation].',\n '.$_SESSION[office_name]?>"; 
+
+var text;
+var d1 = new Date();
+
+var d2 = d1.getDate();
+var m =  d1.getMonth();
+m += 1;  // JavaScript months are 0-11
+var y = d1.getFullYear();
+var d= d2+'-'+m+'-'+y;
+
+
+	var text=`        \t\t                Covering LETTER
+	Dear Sir/Madam,
+	I am here with forwarding my Fresh permanant imprest Request for an amount of `+amount+` for meeting the office contigency expenses for this financial year.
+	
+	Yours Faithfully\n`+name + '\n' + d;
+	if($('#txt_area_request_perm_imprest').length){
+		var curr_text=$("#txt_area_request_perm_imprest").text();
+		$("#txt_area_request_perm_imprest").text(curr_text+'\n'+text);
+
+	 }else if($('#txt_area_request_perm_imprest').length){
+
+		var curr_text=$("#txt_area_request_perm_imprest").text();
+		$("#txt_area_request_perm_imprest").text(curr_text+'\n'+text);
+	 }
+	}
+
+});
+
+</script>
 <script>
 
 function btn_show_imprest_cash_book()
@@ -6718,7 +6984,7 @@ var i_month_next=i_month+1;
 							$( "#txt_date_of_voucher" ).data("date-end-date", maxdate);
 
 							//call_recoupment_form_date(mindate,maxdate);
-						 
+						 $('#btn_bill').prop('disabled',true);
 
 						 show_live_balance(0,0);
 						  }
@@ -7139,7 +7405,7 @@ $(document).on("click",".i_delete_doc",function()
 				
 				<nav  class="navbar  <?php echo $navbar_fixed_top ?>">
   <div class="container-fluid">
-    <div class="navbar-header">
+    <div class="navbar-header " >
       <a class="navbar-brand"  style="color:#fff;" href="#">Imprest</a> <br>
       <p class="fa fa-ksebl fa-4x faa-pulse animated   "></p>
 	  
@@ -7151,7 +7417,7 @@ $(document).on("click",".i_delete_doc",function()
     </div>
 	
 	<div class="collapse navbar-collapse" id="myNavbar" style="margin:auto">
-					<ul id=ul_show_more class="nav navbar-nav" style="display: inline;">
+					<ul id=ul_show_more class="nav navbar-nav" style="display: inline;" style="margin:auto">
 						
 						<?php
 						//print_r($_SESSION);
@@ -7292,10 +7558,10 @@ $(document).on("click",".i_delete_doc",function()
 </div>
 
 
-<!-- <div style='margin-top:2%'> -->
-<div class=row style='margin-top:117px'>
+<!-- <div style='margin-top:2%'>  style='margin-top:117px-->
+<div class=row style="padding-top:75px">
 
-	<div class="col-sm-12 col-xs-12" style="padding-top:75px" >
+	<div class="col-sm-12 col-xs-12" style="padding-top:1px" >
 	
 	
 			
@@ -7304,7 +7570,7 @@ $(document).on("click",".i_delete_doc",function()
 	
 	
 		
-<?php commonI::panel("div_ajax_out","panel-primary","<h2><span style='color:#fff'>Imprest</span> <div style=\"text-align:right;display:inline-block\"><span  class=\"fa fa-ksebl fa-4x faa-pulse animated   \"></span></div></h2>","","Regional IT Unit Kozhikode
+<?php commonI::panel("div_ajax_out","panel-default","<h2><span style='color:#fff'>Imprest</span> <div style=\"text-align:right;display:inline-block\"><span  class=\"fa fa-ksebl fa-4x faa-pulse animated   \"></span></div></h2>","","Regional IT Unit Kozhikode
 
 <span class=text-danger>In case of any issue Please whatsapp your issue to this number .9447 954 719 OR   9847599946. Please quote ur employee code in all correspondences </span>
 

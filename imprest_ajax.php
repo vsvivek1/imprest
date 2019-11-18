@@ -3041,7 +3041,15 @@ if($_POST[option]==$_SESSION[option])
 							$result['adl_msg'] = "Insert into amnt. details failed";
 							$db->DBrollBackTrans();
 
+	$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
 							echo $qry;
+
+							self::show_alert("Inserting voucher failed contact RITU kozhikode immediately at 9847599946. ", "");
+
 							return $result;
 
 							exit;
@@ -3059,6 +3067,16 @@ if($_POST[option]==$_SESSION[option])
 							$result['adl_msg'] = "Insert into amnt. details failed";
 							$db->DBrollBackTrans();
 							echo $qry;
+
+							$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating trans master status failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
 							return $result;
 
 							exit;
@@ -3106,6 +3124,17 @@ if($_POST[option]==$_SESSION[option])
 								$resultx['adl_msg'] = "Insert into amnt. details failed";
 								$db->DBrollBackTrans();
 								echo $qryx;
+
+
+								$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating voucher status to final failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
 								return $resultx;
 
 								exit;
@@ -3131,11 +3160,19 @@ if($_POST[option]==$_SESSION[option])
 
 						$result = $db->UpdateData($qry);
 
-						if ($result1['EOF']) {
+						if ($result['EOF']) {
 							$result['adl_msg'] = "updating trans log with 41 failed";
 							$db->DBrollBackTrans();
 							return $result;
 							echo $qry;
+							$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating trans log failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
 
 							exit;
 						}
@@ -3161,8 +3198,9 @@ if($_POST[option]==$_SESSION[option])
 
 
 						$qry = "select user_id,imp_opn_time as tim,from_branch,designation_id
- from a_imprest_operations  aio inner join vw_office_setup  vu on vu.user_name=aio.action_by::text where 
-  from_office='$_SESSION[office_code]' and to_office='$_SESSION[office_code]' and imp_operation::int=$op_ab and imprest_id_ref='$imprest_ref_id'
+ from a_imprest_operations  aio left join vw_office_setup  vu on vu.user_name=aio.action_by::text where 
+  from_office='$_SESSION[office_code]' and to_office='$_SESSION[office_code]'
+   and imp_operation::int=$op_ab and imprest_id_ref='$imprest_ref_id'
   
   and office_code::int=$_SESSION[office_code]";
 
@@ -3172,14 +3210,15 @@ if($_POST[option]==$_SESSION[option])
 
 						$row1 = $db->SelectData($qry);
 
-
+// print_r($row1);
 						$row = $row1[0];
 
-						$user_id = $row[user_id];
-						$log_time = $row[tim];
-						$branch_id = $row[from_branch];
+						$user_id = (isset($row[user_id])?$row[user_id]:0);
+						$log_time = (isset($row[tim]) ?$row[tim]:date('Y-m-d'));
+						$branch_id = (isset($row[from_branch])?$row[from_branch] : 1101);
 						$action_id = 11;
-						$designation_id = $row[designation_id];
+						
+						$designation_id =(isset($row[designation_id])?$row[designation_id]:189);
 
 
 						$qry = "insert into trans_log (trans_id,user_id,action_id,log_time,branch_id,desig_id)
@@ -3190,11 +3229,21 @@ values($transid,$user_id,$action_id,'$log_time',$branch_id,$designation_id)
 
 						$result = $db->UpdateData($qry);
 
-						if ($result1['EOF']) {
+						if ($result['EOF']) {
 							$result['adl_msg'] = "updating trans log with 11 failed";
 							$db->DBrollBackTrans();
 							return $result;
 							echo $qry;
+
+							$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating trans log failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
 
 							exit;
 						}
@@ -3247,6 +3296,16 @@ values($transid,$user_id,$action_id,'$log_time',$branch_id,$designation_id)
 							echo $qry;
 							return $result;
 
+							$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating trans log failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
+
 							exit;
 						}
 
@@ -3266,6 +3325,16 @@ values($transid,$user_id,$action_id,'$log_time',$branch_id,$designation_id)
 							$db->DBrollBackTrans();
 							echo $qry;
 							return $result;
+
+							$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating making imprest operaton sleep failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
 						}
 
 						$to_office = $post[to_office];
@@ -3296,7 +3365,21 @@ imp_oprn_msg,imprest_id_ref,action_pending,imp_fy) values
 							$db->DBrollBackTrans();
 							echo $qry;
 							return $result;
+
+							$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							echo $qry;
+
+							self::show_alert("Updating making imprest operaton NEW failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
 						}
+
+
+
+
 
 						///inserting to voucher movement
 
@@ -3323,13 +3406,23 @@ imp_oprn_msg,imprest_id_ref,action_pending,imp_fy) values
 								$result['adl_msg'] = "Insert into amnt. details failed";
 								echo $qry;
 								$db->DBrollBackTrans();
+
+								$msg = "ERROR\n$imprest_id_refX,\n$name_of_employee,\n$_SESSION[office_name] \n $phone1";
+							imprestN::execute_sms_personal(1064767, $desig, $msg);
+							imprestN::execute_sms_personal(1064767, $desig, $qry);
+
+
+							//echo $qry;
+
+							self::show_alert("Updating making imprest voucher movement failed.contact RITU kozhikode immediately to fix this at 9847599946. ", "");
+
 								return $result;
 							}
 						}
 						////////////////////////sms ///////////////////////////
 						//$to_branch=$to_branch;
 
-						$fy = '2018-2019';
+						// $fy = '2018-2019';
 
 						$date=date("Y-m-d");
 		//$date=date("2019-03-25");
@@ -5643,14 +5736,14 @@ $qry="update a_imprest_voucher set voucher_status=1, imprest_num='$imprest_id_re
 where imp_voucher_id=$imprest_voucher_id
  ";
 
-echo $qry;
+// echo $qry;
 $db=new DBAccess;
 		
 		$db->DBbeginTrans();
 		
 		
 		
-		//$result=$db->UpdateData($qry);
+		$result=$db->UpdateData($qry);
 
 			
 			if($result['EOF'])
@@ -5700,7 +5793,10 @@ break;
 
 
 				//if($original_office==$_SESSION[office_code] && $imp_holder==$_SESSION[user_name] )
-				if ($_SESSION[aquired] == 1 or ($imp_holder == $_SESSION[user_name])) {
+				// if ($_SESSION[aquired] == 1 or ($imp_holder == $_SESSION[user_name])) {
+					if( $_SESSION[aquired] == 1 or $_SESSION[office_code]==$_SESSION[aru_code] or 
+($imp_holder==$_SESSION[user_name])){
+					
 					?>
 
 
@@ -5902,7 +5998,7 @@ order by date_of_payment,upload_time asc
 
 			$aru_head = 0;
 
-			if ($_POST[imp_operation] == "666") {
+			if ($_POST[imp_operation] == "666" or $_POST[imp_operation] == "777") {
 
 				imprestN::show_vouchers_action_at_aru_returned($_POST, $office_is_aru);
 			} else if ($_POST[imp_operation] == "999" or $_POST[imp_operation] == "91" or $_POST[imp_operation] == "19" or $_POST[imp_operation] == "18" or  $_POST[imp_operation] == "193" or  $_POST[imp_operation] == "192" or  $_POST[imp_operation] == "191") {
@@ -5935,18 +6031,24 @@ order by date_of_payment,upload_time asc
 						//$date=date("2019-03-31");
 $fy = imprestN::findFinancialYear($date);
 			
-			$qry = "select * from a_imprest_voucher where imp_holder='$imp_holder' and imp_holder_office='$original_office'
+			$qry = "select * from a_imprest_voucher where imp_holder='$imp_holder' 
+			and imp_holder_office='$original_office'
 			 and imp_fy='$fy' and type='remitance'";
 			$db = new DBAccess;
-			$row1 = $db->SelectData($qry);
+			// $row1 = $db->SelectData($qry);
 
 			//print_r($row1);
 			//echo $qry;
-			if ($row1['EOF'] == 1) {
+			//  if ($row1['EOF'] == 1) 
+
+
+			if(1)
+			
+			{
 
 				if ($type == 'V') {
 
-					$btn_text = "&nbspConvert To Final Closing";
+					$btn_text = "&nbspConvert To Final Closing .USE WITH CAUTION";
 					$btn_special_class = "btn-primary btn  btn-block  toggle_v_to_vc";
 				} elseif($type == 'VC') {
 					$btn_text = "Edit  Final Closing details";
@@ -5958,9 +6060,10 @@ $fy = imprestN::findFinancialYear($date);
 				$btn_text = "Edit  Final Closing details";
 				$btn_special_class = "btn-warning btn  btn-block  toggle_v_to_vc";
 			}
-		
-			//if($_SESSION[office_code]==$_SESSION[aru_code] or ($imp_holder==$_SESSION[user_name]))
-			if ($_SESSION[aquired] == 1 or ($imp_holder == $_SESSION[user_name])) {
+if( $_SESSION[aquired] == 1 or $_SESSION[office_code]==$_SESSION[aru_code] or 
+($imp_holder==$_SESSION[user_name]))
+			// if ($_SESSION[aquired] == 1 or ($imp_holder == $_SESSION[user_name]))
+			 {
 				?>
 
 
@@ -5968,27 +6071,49 @@ $fy = imprestN::findFinancialYear($date);
 
 				<div class="row">
 
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
-						<button type="button" data-imprest_id_ref='<?php echo  $post[imp_ref_id]; ?>'
-						 data-close=1 id='btn_convert_to_closing' class="<?php echo "$btn_special_class"; ?>">
-							<?php echo $btn_text; ?>
+
+<?php 
+if($type == 'V'){
+?>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 block-center">
+		<button type="button" data-imprest_id_ref='<?php echo  $post[imp_ref_id]; ?>'
+						 data-close=1 id='btn_convert_to_closing' 
+						  title="Click this Button to Change the Request to
+						   Final closing .After the Conversion,Perform Usual steps
+						    "
+						 
+						 class="<?php echo "$btn_special_class"; ?>">
+							<?php echo $btn_text; ?> 
+
+						&nbsp;&nbsp;	<span class="fa fa-question-circle text danger"></span>
 
 
 						</button>
 
 
 					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
-						<button type="button" data-imprest_id_ref='<?php echo  $post[imp_ref_id]; ?>'
-						 data-close=1 id='btn_convert_to_recoupment' class="btn-success btn  btn-block">
-							
-						 Convert to Recoupment
+<?php 
 
+}else if ($type == 'VC'){?>
+
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 block-center">
+						<button type="button"
+						
+						 data-imprest_id_ref='<?php echo  $post[imp_ref_id]; ?>'
+						 data-close=1 
+						  title="Press this button to Convert Final closing Mode to Recoupment Mode.After the Conversion,Perform Usual steps"
+						 id='btn_convert_to_recoupment' class="btn-success btn  btn-block">
+						
+						 Convert to Recoupment  .USE WITH CAUTION
+						 &nbsp;&nbsp;	<span class="fa fa-question-circle text danger"></span>
 
 						</button>
 
 
 					</div>
+
+					<?php 
+					} ?>
 
 				</div>
 
@@ -5998,7 +6123,7 @@ $fy = imprestN::findFinancialYear($date);
 			<?php
 		}
 
-
+	
 
 
 
