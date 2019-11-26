@@ -1187,6 +1187,13 @@ $(document).on("change","#txt_date_of_payement2",function()
 // 		fill_description();
 // };
 
+$(document).on("keyup","#txt_date_of_payement, #txt_date_of_voucher",function(){
+
+	// $(this).attr('val', '');
+	$(this).val('');
+
+});
+
 
 $(document).on("keyup","#txt_paid_to1,#txt_date_of_payement1,#txt_amount_imprest1,#txt_purpose",function()
 

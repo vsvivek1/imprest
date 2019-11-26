@@ -2912,7 +2912,7 @@ if($imp_operation ==777){
 	as type from a_imprest_voucher x inner join v_date_of_imprest_origin vo on vo.imprest_id_ref=x.imprest_num
 	where x.imp_holder='$emp_code' and x.imp_holder_office='$office_code'
 	and imp_fy='$fy' and
-	(x.voucher_status=2) and coalesce(type,'0')<>'r' and amount>0 and time<>'' and
+	(x.voucher_status=2) and coalesce(type,'0')<>'r' and amount>0 and time<>0 and
 	coalesce(time::text)::numeric
 	< (select coalesce(time::text,'0')::numeric
 	from v_date_of_imprest_origin where imprest_id_ref= '$imp_ref_id' )
@@ -2927,7 +2927,7 @@ if($imp_operation ==777){
 		as type from a_imprest_voucher x inner join v_date_of_imprest_origin vo on vo.imprest_id_ref=x.imprest_num
 		where x.imp_holder='$emp_code' and x.imp_holder_office='$office_code'
 		and imp_fy='$fy' and
-		(x.voucher_status=3) and coalesce(type,'0')<>'r' and amount>0 and time<>'' and
+		(x.voucher_status=3) and coalesce(type,'0')<>'r' and amount>0 and time<>0 and
 		coalesce(time::text,'0')::numeric
 		<(select coalesce(time::text,'0')::numeric
 		from v_date_of_imprest_origin where imprest_id_ref= '$imp_ref_id' )
@@ -2965,7 +2965,7 @@ if($imp_operation ==777){
 
 
 
-			//echo $qry;
+			// echo $qry;
 			/*and not to_timestamp(coalesce(time::text,'0')::numeric)>date_of_payment*/
 
 			$used = self::getData($qry, 'sum');
@@ -11329,6 +11329,10 @@ and coalesce(type,'0')<>'r'";
 
 					case "Sub Engineer (E)":
 						return 15000;
+						break;
+						
+					case "Regional Audit Officer":
+						return 4000;
 						break;
 
 					default:
