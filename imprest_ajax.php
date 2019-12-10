@@ -5375,6 +5375,40 @@ $p++;					//imprestN::execute_sms($office_code, "", $msg);
 			break;
 
 
+			case "btn_remove_sup_doc":
+
+				$imp_file_id=$_POST['imp_file_id'];
+				$db = new DBAccess;
+
+				$qry="delete from a_imprest_files where imp_file_id=$imp_file_id";
+
+				$db->DBbeginTrans();
+
+			$result = $db->UpdateData($qry);
+			if ($result['EOF']) {
+
+
+				$db->DBrollBackTrans();
+				$result=array("result"=>"failed","html"=>$qry);
+			
+			echo  json_encode($result);
+				
+
+			return $result;
+			}
+
+
+			$result=array("result"=>"success","html"=>"ok");
+			
+			echo  json_encode($result);
+
+			$db->DBcommitTrans();
+
+				
+			 
+
+
+			break;
 
 
 

@@ -4221,7 +4221,7 @@ values
 			//echo $folder;
 		}
 
-		echo $folder;
+		// echo $folder;
 
 		///	print_r($post);
 		//print_r($file);
@@ -4846,7 +4846,11 @@ where imprest_id_ref='$imprest_id_ref'";
 
 
 	public static function add_supporting_files($post, $file)
-	{ }
+	{ 
+$a=0;
+return 0;
+
+	}
 
 
 

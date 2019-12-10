@@ -2385,7 +2385,54 @@ function show_in_box(){
 	
 }	
 	
-	
+$(document).on("click",".btn_remove_sup_doc",function(){
+
+var ele=$(this);
+var imp_file_id=$(this).data('imp_file_id');
+
+	$.ajax({
+    url: "imprest_ajax.php",
+    cache: false,
+     type:'POST',
+    data:{option:"btn_remove_sup_doc","imp_file_id":imp_file_id},
+    beforeSend: show_ajax_loading_image(),
+  
+    success: function(html){ 
+		
+		// $('#div_ajax_out').html(html); 
+
+
+		var resp=JSON.parse(html);
+
+		if(resp['result']=='success'){
+			// console.log(html);
+
+
+alert("Removed Supporting Document successfully")
+
+ele.parents('tr').remove();
+
+
+
+		}else {
+			console.log(html);
+
+			alert("Failed to Remove Supporting Document")
+
+		}
+		
+		stop_ajax_loading_image();  
+		
+		}
+    
+    
+});	
+
+
+});
+
+
+
 function carosal_load(){
 	
 	$("#td_voucher_amount").html($(".item.active").data("voucher-amount"));
@@ -2552,7 +2599,7 @@ $.ajax({
 		
 	 var resp=JSON.parse(html);
 
-	 //console.log(resp);
+	//  console.log(resp);
 
 	 //console.log(resp.has_sup_doc);
 	 var has_sup_doc=resp.has_sup_doc;
@@ -2576,6 +2623,7 @@ for(var i=0;i<count;i++)
 	var file_type=supfiles[i]['imp_file_type'];
 	var file_link=supfiles[i]['imp_file'];
 	var file_cat1=supfiles[i]['imp_file_category'];
+	var imp_file_id=supfiles[i]['imp_file_id'];
 
 
 switch (file_cat1){
@@ -2648,7 +2696,7 @@ break;
 
 
 
-	$( '<tr  class=tr_sup class="text-info lead"> <td colspan=1 class="bg-warning text-info lead"><span class='+fa_fil+'></span>&nbsp;'+file_cat+'</td><td colspan=3><a href=\''+file_link+'\' target=_blank>click to view </a></td></tr>' ).insertAfter("#tr_desc" );
+	$( '<tr  class=tr_sup class="text-info lead"> <td colspan=1 class="bg-warning text-info lead"><span class='+fa_fil+'></span>&nbsp;'+file_cat+'</td><td colspan=3><a href=\''+file_link+'\' target=_blank>click to view </a></td><td><button title="Delete this Supporting Document" data-imp_file_id='+imp_file_id+' class="btn btn-danger btn-xs btn_remove_sup_doc">&times;</button></td></tr>' ).insertAfter("#tr_desc" );
 
 
 }
