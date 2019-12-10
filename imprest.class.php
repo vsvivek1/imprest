@@ -2976,12 +2976,23 @@ if($imp_operation ==777){
 		}
 		if ($imp_ref_id == 0) {
 
+			$fy = date("Y-m-d");
+			
+	
+			$imp_fy = self::findFinancialYear($fy);
+
+			// 
+
 
 			$qry = "select coalesce(sum(amount),0) as sum from a_imprest_voucher where imp_holder='$_SESSION[user_name]' and 
 		imp_holder_office='$_SESSION[office_code]' and voucher_status='2' and  (coalesce(type,'Nill')<>'r' and 
 		coalesce(type,'Nill')<>'cash_in_hand'
+
+		and imp_fy='$imp_fy'
 		
 		)";
+
+		
 			$used = self::getData($qry, 'sum');
 
 			//echo $qry;
@@ -2990,7 +3001,7 @@ if($imp_operation ==777){
 
 
 
-		//echo $qry;
+		// echo $qry;
 		return $used;
 	}
 
