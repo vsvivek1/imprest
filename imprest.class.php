@@ -3374,6 +3374,9 @@ $db = new DBAccess;
 
 			echo "<thead style='color:blue'>";
 			echo "<tr>";
+
+
+		
 			echo "<th rowspan=2> Sl</th>";
 			echo "<th rowspan=2> Date</th>";
 			//echo "<th>Sys id</th>";
@@ -3382,6 +3385,15 @@ $db = new DBAccess;
 			//echo "<th> Amount Received</th>";
 			echo "<th colspan=2> Amount Disbursed </th>";
 			echo "<th rowspan=2> Head of Account</th>";
+
+			if($_SESSION['aquired']==1){
+
+				echo "<th rowspan=2 class='text-danger'> only for RITU Admins</th>";
+
+			}
+
+
+		
 			echo "<th style='display:none' class=text-primary> Select All <input type=checkbox disabled=disabled checked=checked class=form-control id='voucher_select_all'></th>";
 
 			echo "</tr>";
@@ -3477,6 +3489,8 @@ $db = new DBAccess;
 
 
 
+	
+
 				//echo "<td >$row['imp_voucher_id']</td>";
 				//echo "<td >$row['Voucher Id.']</td>";
 				//echo "<td >$row[voucher_num]</td>";
@@ -3571,14 +3585,42 @@ $db = new DBAccess;
 
 				if ($row[item_desc] <> 'KSEB') {
 					echo "<td >$row[item_acc_code]</td>";
+
+
+					if($_SESSION['aquired']==1){
+
+						echo "<td  class='text-danger'> <button name=$row[imp_voucher_id] class='btn btn-danger btn_del_voucher_admin'>
+						
+						<span class='fa fa-minus'></span> 
+						
+						</button></td>";
+				
+					}
+
+
+
 				}
+
+				
 
 
 
 				///////////////////////////////////////////////////////////////////
 
 
-				echo "<td class=text-primary><input disabled=disabled style='display:none' checked=checked class=\"form-control chk_box\" type=checkbox id=$row[imp_voucher_id]></td>";
+			
+
+
+	echo "<td class=text-primary><input disabled=disabled style='display:none' checked=checked class=\"form-control chk_box\"
+	 type=checkbox id=$row[imp_voucher_id]></td>";
+
+	//  echo "<td></td>";
+
+
+
+			
+
+				
 
 				echo "</tr>";
 			}

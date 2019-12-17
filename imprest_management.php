@@ -2400,9 +2400,24 @@ var imp_file_id=$(this).data('imp_file_id');
     success: function(html){ 
 		
 		// $('#div_ajax_out').html(html); 
+		console.log(html);
 
 
-		var resp=JSON.parse(html);
+		
+
+		if(html) {
+    try {
+        var resp=JSON.parse(html);
+    } catch(e) {
+        alert(e); // error in the above string (in this case, yes)!
+
+		return false;
+    }
+}
+
+
+
+
 
 		if(resp['result']=='success'){
 			// console.log(html);
@@ -2417,7 +2432,10 @@ ele.parents('tr').remove();
 		}else {
 			console.log(html);
 
-			alert("Failed to Remove Supporting Document")
+
+			alert(resp['msg']);
+
+			// alert()
 
 		}
 		
@@ -2599,7 +2617,7 @@ $.ajax({
 		
 	 var resp=JSON.parse(html);
 
-	//  console.log(resp);
+	// d console.log(resp);
 
 	 //console.log(resp.has_sup_doc);
 	 var has_sup_doc=resp.has_sup_doc;
@@ -5443,6 +5461,52 @@ var url="imprest_ajax.php";
 
 </script>
 
+
+<script>
+
+
+
+
+
+var url="imprest_ajax.php";
+		
+		
+		
+		
+		$(document).on("click",".btn_del_voucher_admin",function() {
+
+			// alert($(this).attr('name')); return false;
+			
+			if(confirm("Do You Really want to delete This Item . Use very carefully")){
+			
+		
+													 $.ajax({
+													       url: url,
+													       type: 'POST',
+													       data:{option:'btn_del_voucher',voucher_id:$(this).attr('name')},
+													           
+													        beforeSend: show_ajax_loading_image(),
+															
+													      
+													      
+													       success: function (response) {
+															 
+															   btn_show_imprest_cash_book();
+															   stop_ajax_loading_image();
+															  
+													         
+													        
+													         
+													       }
+													   });
+													   
+				   }
+	
+
+});
+
+
+</script>
 
 
 
