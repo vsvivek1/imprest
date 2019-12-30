@@ -3195,7 +3195,7 @@ $ss=0;
 		$imp_fy = self::findFinancialYear($fy);
 
 		$qry = "select COALESCE(sum(amount),0) as sum from a_imprest where imp_holder='$emp_code'
-	 and imp_holder_office='$office_code' and imp_fy='$imp_fy'";
+	 and imp_holder_office='$office_code' and imp_fy='$imp_fy' and isClosed=FALSE" ;
 
 		// and imp_time<'$freshIssuebeforeDate'
 
@@ -3548,6 +3548,18 @@ $db = new DBAccess;
 
 
 					echo "<td class=text-success>$received1</td>";
+
+					echo "<td></td><td></td>";
+
+					if($_SESSION['aquired']==1){
+
+						echo "<td  class='text-danger'> <button name=$row[imp_voucher_id] class='btn btn-danger btn_del_voucher_admin'>
+						
+						<span class='fa fa-minus'></span> 
+						
+						</button></td>";
+				
+					}
 
 					//echo "<td>0</td>";
 

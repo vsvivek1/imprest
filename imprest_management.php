@@ -5491,7 +5491,7 @@ var url="imprest_ajax.php";
 													      
 													       success: function (response) {
 															 
-															   btn_show_imprest_cash_book();
+															//    btn_show_imprest_cash_book();
 															   stop_ajax_loading_image();
 															  
 													         

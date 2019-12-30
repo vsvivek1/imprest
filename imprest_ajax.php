@@ -5380,29 +5380,55 @@ $p++;					//imprestN::execute_sms($office_code, "", $msg);
 				$imp_file_id=$_POST['imp_file_id'];
 				$db = new DBAccess;
 
-				$qry="delete from a_imprest_files where imp_file_id=$imp_file_id";
+				$q="select * from a_imprest_files where imp_file_id=$imp_file_id"; 
+				$row = $db->SelectData($q);
+		if ($row['EOF'] == 1) {
+			$result=array("result"=>"failed","html"=>$q);
 
-				$db->DBbeginTrans();
+			return false;
+		}
 
-			$result = $db->UpdateData($qry);
-			if ($result['EOF']) {
+		$imp_voucher_id=$row[0]['imp_voucher_id'];
+		$originator=substr($imp_voucher_id,0,7);
+
+		if($_SESSION['user_name']==$originator)
+		// if(1)
+		{
+
+			$qry="delete from a_imprest_files where imp_file_id=$imp_file_id";
+
+			$db = new DBAccess;
+
+			$db->DBbeginTrans();
+
+		$result = $db->UpdateData($qry);
+		if ($result['EOF']) {
 
 
-				$db->DBrollBackTrans();
-				$result=array("result"=>"failed","html"=>$qry);
+			$db->DBrollBackTrans();
+			$result=array("result"=>"Failed","html"=>$qry,"msg"=>"Failed to execute in DB");
+		
+		echo  json_encode($result);
 			
+
+		return $result;
+		}
+
+
+		$result=array("result"=>"success","html"=>"$originator");
+		
+		echo  json_encode($result);
+
+		$db->DBcommitTrans();
+
+		}else{
+
+			$result=array("result"=>"Failed","html"=>"ok","msg"=>"Only Original imprest holder can use this option");
 			echo  json_encode($result);
+
+		}
+
 				
-
-			return $result;
-			}
-
-
-			$result=array("result"=>"success","html"=>"ok");
-			
-			echo  json_encode($result);
-
-			$db->DBcommitTrans();
 
 				
 			 
