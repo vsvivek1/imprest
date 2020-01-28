@@ -1293,7 +1293,7 @@ $pass_text = "Pass the bill For Final  Closing";
 									<tr>
 
 										<td>For Payment<input class=auto_text_check_box_v type=checkbox value="&#10&#13For Payment&#10&#13"></td>
-										<td>For closure<input class=auto_text_check_box_v type=checkbox value="&#10&#13For Closure&#10&#13"></td>
+										<!-- <td>For closure<input class=auto_text_check_box_v type=checkbox value="&#10&#13For Closure&#10&#13"></td> -->
 									</tr>
 								</table>
 
@@ -3519,6 +3519,19 @@ $db = new DBAccess;
 					$received2 = $received2 + $received1;
 					$openingbalance = $received1;
 					//$openingbalance=$received2;
+
+
+
+					if($_SESSION['aquired']==1){
+						echo "<td></td><td></td>";
+
+						echo "<td  class='text-danger'> <button name=$row[imp_voucher_id] class='btn btn-danger btn_del_voucher_admin'>
+						
+						<span class='fa fa-minus'></span> 
+						
+						</button></td>";
+				
+					}
 				}
 
 
@@ -5946,7 +5959,7 @@ and aiv.voucher_status=1  and aif.imp_file_category='V' order by date_of_payment
 
 							}
 
-							if (0) {
+							if (1) {
 
 								include_once('../class/budget.class.php');
 
@@ -6635,6 +6648,9 @@ status=1
 	public static function table_month_year_for_initial_setup($action)
 	{
 		$month_names = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+		
+		$year_names=array('2019','2020');
+		
 		$mon = 1;
 
 		if ($action == "E") {
@@ -6642,7 +6658,9 @@ status=1
 			$imp_holder = $_SESSION[user_name];
 			$imp_holder_office = $_SESSION[office_code];
 			$status = 1; // first status =1
-			$qry = "select * from a_imprest_details where imp_holder='$_SESSION[user_name]' and imp_holder_office='$_SESSION[office_code]' and status=1";
+			$qry = "select * from a_imprest_details where 
+			imp_holder='$_SESSION[user_name]' 
+			and imp_holder_office='$_SESSION[office_code]' and status=1";
 
 
 			//echo $qry;
@@ -6668,7 +6686,8 @@ status=1
 			</tr>
 			<td>
 
-				<select id=i_month name=i_month <?php echo $disabled; ?> class='form-control'>
+				<select id=i_month name=i_month <?php echo $disabled; ?>
+				 class='form-control'>
 
 
 					<?php
@@ -6688,12 +6707,32 @@ status=1
 
 				</select>
 			</td>
-
+			
 			<td>
+<?php
 
-				<select class='form-control' id=i_year>
-					<option value=2019 selected=selected>2019</option>
-					<option value=2020>2020</option>
+// echo "i year $i_year, year";
+
+?>
+				<select class='form-control' id=i_year   <?php echo $disabled; ?>>
+
+				<?php
+					foreach ($year_names as $year) {
+
+
+						if ($year == $i_year) {
+							$selected = "selected=selected";
+						} else {
+							$selected = "";
+						}
+					
+						echo "<option  $selected value=$year>$year</option>";
+						//$mon++;
+					}
+					?>
+
+
+
 				</select>
 
 
@@ -10704,11 +10743,19 @@ inner join t_master tm on tm.trans_id=paytn.bill_trans_id
 
 					if ($row[action_pending] == 't') {
 						if ($type == 'V' or $type == "VC") {
-							echo "<td><button class='btn btn-danger delete' data-imp-operation='$row[imp_operation]' data-imprest_id_ref=$row[reference] value=$row[operation]>Delete</button><br>";
+							echo "<td><button class='btn btn-danger delete' data-imp-operation='$row[imp_operation]' data-imprest_id_ref=$row[reference] value=$row[operation]>
+							Take back to inbox 
+							
+							</button><br>";
 							echo "<br><button class='btn btn-success show_send_voucher' data-imp-operation=$row[imp_operation] data-imprest_id_ref=$row[reference] value=$row[operation]>Show send Vouchers</button></td>";
 						} elseif ($type == 'P') {
 
-							echo "<td><button class='btn btn-danger delete' data-imp-operation=$row[imp_operation] data-imprest_id_ref=$row[reference] value=$row[operation]>Delete</button><br>";
+							echo "<td><button class='btn btn-danger delete' data-imp-operation=$row[imp_operation] data-imprest_id_ref=$row[reference] value=$row[operation]>
+							
+							Take back to inbox 
+							
+							
+							</button><br>";
 							echo "<br><button class='btn btn-primary show_related_correspondences'
 			 data-imp-operation=$row[imp_operation] data-imprest_id_ref=$row[reference]
 			  value=$row[operation]>Show Related Correspondences</button></td>";
@@ -12706,7 +12753,7 @@ and imp_fy='$fy'
 										$qry = "select  distinct(acc_head),acc_code from trans_heads th inner join data_master dm on dm.dm_id=th.dm_id where 
 
 
-					trans_type=104 and visible=true and dm.loc_code=$loccode order by acc_code";
+					trans_type=104 and visible=true and dm.loc_code=$loccode order by acc_head";
 
 										self::select($qry, "acc_code", "acc_head", "item_acc_head", "item_acc_head", 0);
 

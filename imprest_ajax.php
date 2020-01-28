@@ -2091,7 +2091,7 @@ left join (select code,aru_code from offices )o on o.code=vbn.imp_holder_office 
 
 	inner join t_master tm on tm.trans_id=paytn.trans_id
 	
-	 where aiv.type='r' and imp_holder='$_SESSION[user_name]' order by trans_date";
+	 where aiv.type='r' and imp_holder='$_SESSION[user_name]' order by trans_date desc";
 
 				//echo $qry;
 				$db = new DBAccess;
@@ -2105,23 +2105,46 @@ left join (select code,aru_code from offices )o on o.code=vbn.imp_holder_office 
 					?>
 
 
-					<ul class="list-group">
+					<!-- <ul class="list-group"> -->
+						<table class="table table-compact table-bordered table-stripped">
+							<th>Slno</th>
+							<th>Date</th>
+							<th>Cheque No</th>
+							<th>Amount</th>
+							<caption class="bg-info  text-center">Cheques Received</caption
 
 						<?php
+						$sl=1;
 						foreach ($row1 as $row) {
+// 							echo "
+// // <li class='list-group-item'>
+// 		<span class='badge pull-left'>$row[date1]</span>
+// 	<span class='text-success'>Cheque No</span>
+// 	 <span class=text-primary>$row[description] </span>
+// 	<span class='text-danger'>Amount</pan> <span class=text-primary>$row[amt] </span>
+// 	</li>
+// ";
 							echo "
-<li class='list-group-item'>
-		<span class='badge pull-left'>$row[date1]</span>
-	<span class='text-success'>Cheque No</pan> <span class=text-primary>$row[description] </span>
-	<span class='text-danger'>Amount</pan> <span class=text-primary>$row[amt] </span>
-	</li>
+<tr class=lead style='font-size=14px'>
+<td>$sl</td>
+<td><span class=' pull-left'>$row[date1]</span></td>
+		
+		
+	
+	<td> <span class=text-primary>$row[description] </span></td>
+	
+	 <td> <span class=text-primary>$row[amt] </span></td>
+	
+	<tr>
 ";
+$sl++;
 						}
+						
 						?>
 
 
-					</ul>
-
+					<!-- </ul> -->
+					</table>
 
 				<?php
 

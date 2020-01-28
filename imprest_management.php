@@ -1,6 +1,8 @@
 
 	<?php
  include_once("imprest.class.php");
+ include_once("./../class/DBAccess.class.php");
+
 session_start();
 //print_r($_SESSION);
 //and $_SESSION[previlege_id]==3
@@ -7289,6 +7291,8 @@ var i_year =$("#i_year").val();
 							call_recoupment_form_date(mindate,maxdate);
 							//alert(mindate);
 
+							// console.log(html);
+
 							//alert($( "#txt_date_of_payement" ).data("date-end-date"));
 							
 							//alert($( "#txt_date_of_payement" ).data("date-end-date"));
@@ -7542,14 +7546,98 @@ $(document).on("click",".i_delete_doc",function()
 						//print_r($_SESSION);
 							if($_SESSION[office_code]!= $_SESSION[aru_code])
 							{?>
+						
+						<?php 
+
+//check from a_imprest whether reached delegation limit in fy in empcode in same office
+
+
+
+$date = date("Y-m-d");
+
+$fy = imprestN::findFinancialYear($date);
+// $qry="select sum(amount) from a_imprest where 
+// imp_holder='$_SESSION[user_name]' and
+// imp_holder_office='$_SESSION[office_code]' and
+// imp_fy='$fy'";
+// $db->DBbeginTrans();
+
+
+$sum=imprestN::getSumOfIssuedImprestInFy($_SESSION['user_name'],
+$_SESSION['office_code'], $freshIssuebeforeDate);
+
+$delegationAmount=imprestN::getPermanantImprestAmount();
+
+// if($_SESSION['aquired']==1){
+// 	if($delegationAmount<=$sum)
+// 	echo "$sum is requested and $delegationAmount is delegation";
+	
+
+
+// }
+
+
+
+// check whether cash_in_hand  entry is present in fy limit in fy in empcode in same office
+
+$qry="select COALESCE (sum(amount),0) as sum from a_imprest_voucher where imp_holder='$_SESSION[user_name]'
+and imp_holder_office='$_SESSION[office_code]' and type='cash_in_hand'
+and imp_fy='$fy'
+
+
+";
+
+$db = new DBAccess;
+$row = $db->SelectData($qry);
+
+// $row=$db->SelectData($qry);
+
+$cash_in_hand=$row[0]['sum'];
+
+// if($_SESSION['aquired']==1){
+// 	if($delegationAmount<=$sum)
+// 	echo "$cash_in_hand is cash in hand and $delegationAmount is delegation";
+	
+
+
+// }
+
+
+
+if($delegationAmount<=$sum){
+	$ShowFreshRequestButton=false;
+	
+}else{
+	$ShowFreshRequestButton=true;
+
+}
+
+
+if($delegationAmount<=$cash_in_hand){
+	$ShowFreshRequestButton=false;
+	
+}
+
+
+
+						// $ShowFreshRequestButton=true;
+
+						if($ShowFreshRequestButton)
+						{
+						
+						?>
+						
+						
 						<li style="display: inline;" class="list-inline-item">
-							<?php round_btn("btn_request_imprest","myBut","Request Imprest","fa fa-inr fa-sm","color:red","Request Fresh Imprest") ?>	
+							<?php round_btn("btn_request_imprest","myBut",
+							"Request Imprest","fa fa-inr fa-sm","color:red",
+							"Request Fresh Imprest") ?>	
 						
 
 						
 						
 						</li>
-						
+						<?php } ?>
 
 
 						<?php
