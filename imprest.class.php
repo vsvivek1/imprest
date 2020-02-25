@@ -5104,7 +5104,7 @@ and aiv.voucher_status=1  and aif.imp_file_category='V' order by date_of_payment
 				<div class='col-sm-6'>
 					<div class="bs-callout bs-callout-primary">
 
-						<div id="<?php echo $carosal_id; ?>" class="carousel slide" data-interval="false" data-ride="carousel" style="width: auto;
+						<div id="<?php echo $carosal_id; ?>" class="carousel slide" data-wrap="false" data-interval="false" data-ride="carousel" style="width: auto;
 	   		position: relative;  margin: auto;   bottom: 0;   height: auto; z-index:99">
 							<!-- Indicators -->
 
@@ -10723,10 +10723,14 @@ inner join t_master tm on tm.trans_id=paytn.bill_trans_id
 								$revokable = 1;
 
 								//	$textrevoke="$outTrans Voucher $imp_operation Can be revoked till payment is effected. No action Permited after effecting payment$trans_id";
-								$textrevoke = "Voucher  Can be revoked till payment is effected. No action Permited after effecting payment";
+								$textrevoke = "Voucher  Can be revoked till payment is effected. No action Permited after effecting payment Trans Id is $trans_id
+								<span class='text-primary'>Trans Id is $trans_id</span><br>  <span class='text-warning'>Trans status is $outTrans</span>;
+								
+								";
 							} else {
 								$revokable = 0;
-								$textrevoke = "Voucher cannot be revokable.No action Permited";
+								$textrevoke = "Voucher cannot be revokable.No action Permited.
+								 <span class='text-primary'>Trans Id is $trans_id</span><br>  <span class='text-warning'>Trans status is $outTrans</span>";
 							}
 
 
@@ -11448,7 +11452,7 @@ and coalesce(type,'0')<>'r'";
 						break;
 						
 					case "Regional Audit Officer":
-						return 4000;
+						return 7500;
 						break;
 
 					default:

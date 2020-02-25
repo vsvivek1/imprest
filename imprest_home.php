@@ -14,8 +14,10 @@ include_once("common.class_imp.php");
 
 
 <div style="text-align:right;">
-			<!--<A style="display:block;text-align:right; cursor: pointer;" href="./expAcc.php?id=1040007&frombtn=1&sid=<?php echo $sid;?>"> -->
-			<!--	<img style="margin: 0 auto; text-align:right;" src="../public/img/imprest.png" alt="Imprest module" />-->
+			<!--<A style="display:block;text-align:right; cursor: 
+			pointer;" href="./expAcc.php?id=1040007&frombtn=1&sid=<?php echo $sid;?>"> -->
+			<!--	<img style="margin: 0 auto; text-align:right;" 
+			src="../public/img/imprest.png" alt="Imprest module" />-->
 	
 								
 								
@@ -115,6 +117,98 @@ else
 								
 									  </div>
 								</div>
+
+		<?php
+		if($_SESSION[user_name]=='1064767'){
+
+			?>
+			<div>
+				<h2 class="bg-primary">Fastest Recoupments</h2>
+			<table class="table table-bordered table-compact">
+				<thead>
+					<th>RANK</th>
+					<th>TIME</th>
+					<th>NAME</th>
+					<th>OFFICE</th>
+				</thead>
+			<tbody>
+			<?php
+
+
+$qry="select age(b.imp_opn_time,a.imp_opn_time) as TIME_FOR_RECOUPMENT /*,a.imprest_id_ref*/,ename AS EMPLOYEENAME,o.name AS OFFICE from
+
+(select imp_opn_time,imprest_id_ref,action_by,from_office from a_imprest_operations where imp_operation='18') a
+
+inner join
+
+
+(select imp_opn_time,imprest_id_ref from a_imprest_operations where imp_operation='200') b on a.imprest_id_ref=b.imprest_id_ref
+
+inner join dl_empl d on a.action_by=d.unique_code::text
+
+inner join offices o on o.code=a.from_office
+and a.imp_opn_time between date_trunc('MONTH',now())::DATE and
+ (date_trunc('month',now()) + interval '1 month' - interval '1 day')::date
+
+ and age(b.imp_opn_time,a.imp_opn_time)<'3 days' order by TIME_FOR_RECOUPMENT asc ;
+
+
+";
+$db=new DBAccess;
+
+
+
+// echo $qry;
+$row1=$db->SelectData($qry);
+
+// 
+if($row1['EOF']==1){
+
+	$nop="";
+}
+
+else
+{
+ $sl=1;
+ echo "<tbody>";
+	foreach($row1 as $row ){
+		$dt=date('H',strtotime($row['time_for_recoupment']));
+		echo "
+	
+		<tr>
+							
+		
+		<td>$sl</td>
+		<td>$dt</td>
+
+		<td>$row[employeename]</td>
+		<td>$row[office]</td>
+									
+										</tr>
+		
+		
+		";
+		$sl++;
+
+	}
+	
+
+
+
+}
+
+?>
+	
+								</tbody>
+
+								</table>
+
+								
+
+<?php
+
+		}
+		?>
 								
 
 								
@@ -122,3 +216,6 @@ else
 				
 			<!--</A>-->
 	</div>
+
+	
+

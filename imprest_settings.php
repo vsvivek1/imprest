@@ -12,6 +12,90 @@ if($_SESSION[logged_in]==1)
 switch ($_POST["option"]){
 
 
+	case "btn_del_a_imprest":
+		$imprest_id=$_POST['imprest_id'];
+
+		$qry="delete from a_imprest where imprest_id=$imprest_id";
+		$db=new DBAccess;
+		
+		$db->DBbeginTrans();
+		
+		$result=$db->UpdateData($qry);
+
+		
+			if($result['EOF'])
+		{	
+			
+			$db->DBrollBackTrans();
+			return $result;
+		}else{
+echo "Success";
+
+		}
+		$db->DBcommitTrans();
+
+	break;
+
+
+	case "btn_search_aimprest":
+		$imp_holder=$_POST['imprest_holder'];
+		$qry="select * from a_imprest where imp_holder='$imp_holder'";
+		// echo $qry;
+		$db = new DBAccess;
+
+		$row1 = $db->SelectData($qry);
+
+		if(!$row1['EOF']==1){
+
+?>
+<table class="table table-bordered table-stripped table-hover">
+	<tr class="text-primary">
+	<th>Slno</th>
+	<th>Imp req Number</th>
+	<th>imp holder</th>
+	<th>imp holder office</th>
+	<th>Amount</th>
+	<th>imp Fy</th>
+	<th>imp time</th>
+	<th>Action</th>
+	</tr>
+
+
+<?php 
+
+$sl=1;
+foreach($row1 as  $r1){
+echo "<tr>";
+
+}
+
+echo "
+	<td>$sl</td>
+	<td>$r1[imp_req_num]</td>
+	<td>$r1[imp_holder]</td>
+	<td>$r1[imp_holder_office]</td>
+	<td>$r1[amount]</td>
+	<td>$r1[imp_fy]</td>
+	<td>$r1[imp_time]</td>
+	<td><button value=$r1[imprest_id] class='btn btn-primary btn_del_a_imprest'>delete</button></td>"
+	
+?>
+<?php
+echo "</tr>";
+echo "</table>";
+		}else{
+?>
+<div class="alert alert-danger">No data Found</div>
+<?php
+
+
+		}
+	break;
+
+
+
+
+
 case "btn_show_settings":
 
 	// echo $_SESSION[higher_office_code]."<br>"; 
@@ -389,10 +473,22 @@ phone;
 
 <div class="container">
 	<div class="row">
-		<div class="col-sm-3 col-sm-offset-3">
+		<div class="col-sm-3 ">
 			<label for="">Search A imprest</label>
-			<input type="text" class="form-control" id="search_a_imprest">
-			<button class="btn btn-primary center-block" id="btn_search_aimprest" > Search  </button></div>
+			<input type="text" class="form-control" value='<?php echo $_SESSION[user_name] ?>' id="search_a_imprest">
+	</div>
+
+	<div class="col-sm-3 ">
+	<button class="btn btn-primary center-block" id="btn_search_aimprest" > Search  </button></div>
+
+
+</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12" id="div_a_imprest_out"></div>
+		<div class="col-sm-12" id="div_a_imprest_out_response"></div>
 	</div>
 </div>
 
