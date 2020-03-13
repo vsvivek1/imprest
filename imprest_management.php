@@ -905,7 +905,42 @@ if (1)
 		});
 	</script>
 
+<script>
 
+	//march alert
+	$(document).on("click", "#closing_reminder", function() {
+
+
+
+$.ajax({
+	url: "imprest_ajax.php",
+	cache: false,
+	type: 'POST',
+	data: {
+		option: "closing_reminder"
+	},
+	beforeSend: show_ajax_loading_image(),
+
+	success: function(html) {
+
+
+		$('#div_ajax_out').html(html);
+		//$('#ajax_modal').html(html);
+		///$('#ajax_modal').modal('show'); 
+		//carosal_load();
+		stop_ajax_loading_image();
+
+
+
+	}
+
+
+
+});
+
+});
+
+</script>
 
 
 	<script>
@@ -5324,7 +5359,7 @@ if($(this).attr("id")=="sub_to_expac")
 
 		$(document).on("click", ".delete", function() {
 
-			if (confirm("Do You Really want to delete This Item")) {
+			if (confirm("Do You really want to take back this to your Inbox ?")) {
 
 				$.ajax({
 					url: url,
@@ -7401,7 +7436,7 @@ $(document).on("keyup", "#txt_amount_imprest,.item_amount", function(event) {
 						max = 30;
 						break;
 					case 2:
-						var isLeap = new Date(year, 1, 29).getDate() == 29;
+						var isLeap = new Date(i_year, 1, 29).getDate() == 29;
 						max = 28 + (isLeap ? 1 : 0);
 						break;
 
@@ -7961,7 +7996,7 @@ and imp_fy='$fy' and date_of_payment<CURRENT_DATE and split_part(imprest_num,'/'
 										$empcode = $_SESSION[user_name];
 										$office_code = $_SESSION[office_code];
 
-										$msg = "$name &nbsp; $empcode <br>$desig $branch,<br>$office_name - $office_code";
+										$msg = "<span id=user>$name<span> &nbsp; $empcode <br>$desig $branch,<br>$office_name - $office_code";
 										?>
 										<?php //round_btn("btn_user_details","myBut",$msg,"fa fa-user fa-sm","color:pink",$msg) 
 										?>
@@ -8014,7 +8049,10 @@ and imp_fy='$fy' and date_of_payment<CURRENT_DATE and split_part(imprest_num,'/'
 
 			<?php commonI::panel("div_ajax_out", "panel-default", "<h2><span style='color:#fff'>Imprest</span> <div style=\"text-align:right;display:inline-block\"><span  class=\"fa fa-ksebl fa-4x faa-pulse animated   \"></span></div></h2>", "", "Regional IT Unit Kozhikode
 
-<span class=text-danger>In case of any issue Please whatsapp your issue to this number .9447 954 719 OR   9847599946. Please quote ur employee code in all correspondences </span>
+<span class=text-danger>
+<b class='bg-danger text-warning lead' style='color:red;'> ! Important Submit all your Vouchers of this Financial year to ARU Before MARCH 31st. Close your imprest on or before MARCH 31st </b><br>
+In case of any issue Please whatsapp your issue to this number .9447 954 719 OR   9847599946.
+ Please quote ur employee code in all correspondences </span>
 
 ", "col-sm-12") ?>
 
@@ -8185,9 +8223,9 @@ box-shadow: 6px 9px 6px 0px rgba(46,7,176,0.75); */
 	}
 
 	#div_adjustment_sheet1 {
-		-webkit-box-shadow: 0px 24px 31px -11px rgba(0, 0, 0, 0.91);
-		-moz-box-shadow: 0px 24px 31px -11px rgba(0, 0, 0, 0.91);
-		box-shadow: 0px 24px 31px -11px rgba(0, 0, 0, 0.91);
+		-webkit-box-shadow: 10px 10px 4px -7px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 4px -7px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 4px -7px rgba(0,0,0,0.75);
 
 		border-radius: 5%;
 		padding: 2%;
@@ -8196,9 +8234,24 @@ box-shadow: 6px 9px 6px 0px rgba(46,7,176,0.75); */
 
 	#div_ajax_out,
 	.message {
-		-webkit-box-shadow: 14px 18px 83px 4px rgba(0, 0, 0, 0.91);
-		-moz-box-shadow: 14px 18px 83px 4px rgba(0, 0, 0, 0.91);
-		box-shadow: 14px 18px 83px 4px rgba(0, 0, 0, 0.91);
+		-webkit-box-shadow: 10px 10px 4px -7px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 4px -7px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 4px -7px rgba(0,0,0,0.75);
 		padding: 2%
 	}
+
+	#myNavbar{
+  
+ 
+  padding-left:10%;
+  padding-top:1%;
+  
+
+  
+}
+
+.navbar-header {
+	
+	padding-left:3%
+}
 </style>

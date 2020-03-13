@@ -895,6 +895,9 @@ by  date_of_payment,upload_time desc
 
 
 				<button type="button" id=btn_alert_pending_sms_to_feild class="btn btn-warning">SEND ALERT SMS to FEILD 2 DAYS</button>
+			
+			
+				<button type="button" id=closing_reminder class="btn btn-warning">CLOSING REMINDER</button>
 
 			</div>
 			<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -5318,6 +5321,74 @@ imprestN::execute_sms($office_code, "", $msg);
 
 
 			break;
+
+			case "closing_reminder":
+
+				$qry = "select * from (
+
+					select sum(amount) as balance ,imp_holder,name as oname,ap.phone,ename
+					
+					 from a_imprest_voucher aiv left join a_personal_contacts ap
+					  on ap.empcode::text=aiv.imp_holder 
+					  inner join offices o on o.code=aiv.imp_holder_office
+					left join dl_empl d 
+					 on aiv.imp_holder=d.unique_code::text
+					  
+					 where imp_fy='2019-2020'   group by imp_holder,oname,ap.phone,ename
+					
+					
+					) a 
+					  where a.balance<0 and a.balance>-15001 order by 5,3,1
+ 
+ ";
+
+				$db = new DBAccess;
+				//echo $qry;
+				$row1 = $db->SelectData($qry);
+
+$p=0;
+				foreach ($row1 as $row) {
+
+
+					$phone = $row[phone];
+					$employee = $row[ename];
+					$amount = $row[balance]*-1;
+					// $branch = $row[branch];
+					$office_name = $row[oname];
+					// $office_code = $row[to_office];
+
+$msg = "Dear $employee,\nImportant reminder! Please upload all vouchers and Close the Imprest before March 31st.Balance amount in your account is Rs$amount/- for  $office_name. \nRegards,\nRegional IT Unit Kozhikode";
+
+					imprestN::send_sms($phone, $msg);
+					//imprestN::send_sms(+919847599946,$msg.$phone);
+					//imprestN::send_sms(+919847599946,$msg.$phone);
+if($p==0)
+{
+	imprestN::send_sms(+919847599946,$msg.$phone);
+
+}
+$p++;					
+
+
+// imprestN::execute_sms($office_code, "", $msg);
+					?>
+
+					<div class="alert alert-danger">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+						<strong>Title!</strong><?php echo $msg . $phone; ?>
+					</div>
+
+
+				<?php
+
+			}
+
+
+
+
+			break;
+
+
 		case "alert_pending_sms_to_feild":
 
 			$qry = "select distinct imp_holder,office_name,branch,entity_name,from_date,designation,ename  from

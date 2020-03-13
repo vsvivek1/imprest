@@ -5959,7 +5959,7 @@ and aiv.voucher_status=1  and aif.imp_file_category='V' order by date_of_payment
 
 							}
 
-							if (1) {
+							if (0) {
 
 								include_once('../class/budget.class.php');
 
